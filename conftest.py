@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 def pytest_addoption(parser):
-    #Выбор языка и браузера
+    #Выбор языка и браузера, по умолчанию хром и английский
     parser.addoption('--browser_name',
                     action='store',
                     default="chrome",
@@ -17,7 +17,7 @@ def pytest_addoption(parser):
 def browser(request):
     """
     Фикстура запускающая браузер перед каждой вызванной функцией и
-    выключающая браузер после выполнения функции
+    закрывающая браузер после выполнения функции
     """
     browser_name = request.config.getoption("browser_name")
     user_language = request.config.getoption("language")
@@ -26,6 +26,7 @@ def browser(request):
         print("\nstart chrome browser for test..")
         options = Options()
         options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
+                options.add_experimental_option('excludeSwitches', ['enable-logging'])
         browser = webdriver.Chrome(options=options)
     elif browser_name == "firefox":
         print("\nstart firefox browser for test..")
